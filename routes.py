@@ -3,6 +3,24 @@ from flask import *
 from datetime import datetime
 import database
 
+import os
+import sqlite3
+
+def init_db():
+    db_path = os.path.join(os.getcwd(), 'mydb.db')
+    if not os.path.exists(db_path):
+        print("初始化数据库 ...")
+        conn = sqlite3.connect(db_path)
+        with open(os.path.join(os.getcwd(), 'schema.sql'), 'r') as f:
+            conn.executescript(f.read())
+        conn.close()
+        print("数据库初始化完成。")
+    else:
+        print("数据库已存在，跳过初始化。")
+
+# 在Flask app启动前调用
+init_db()
+
 user_details = {}
 session = {}
 page = {}
